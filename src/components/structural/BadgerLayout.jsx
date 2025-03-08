@@ -59,7 +59,7 @@ function BadgerLayout(props) {
             </Nav.Link>
             <NavDropdown title="Chatrooms">
               {chatrooms.map((chatroom) => (
-                <NavDropdown.Item as={Link} key={chatroom}>
+                <NavDropdown.Item as={Link} to={`chatrooms/${chatroom}`} key={chatroom}>
                   {chatroom}
                 </NavDropdown.Item>
               ))}
