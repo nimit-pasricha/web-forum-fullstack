@@ -6,6 +6,8 @@ export default function BadgerRegister() {
   const [pin, setPin] = useState("");
   const [confirmedPin, setConfirmedPin] = useState("");
 
+  //   TODO: Handle other error codes
+
   function registerUser() {
     const regex = /^\d{7}$/;
     if (!regex.test(pin) || !regex.test(confirmedPin)) {
