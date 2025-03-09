@@ -9,7 +9,6 @@ export default function BadgerChatroom(props) {
   const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
 
   const loadMessages = () => {
-    console.log(props.name);
     fetch(
       `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?chatroom=${props.name}&page=${page}`,
       {
