@@ -9,7 +9,8 @@ export default function BadgerLogin() {
   const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
   const navigate = useNavigate();
 
-  function login() {
+  function login(e) {
+    e?.preventDefault();
     const regex = /^\d{7}$/;
     if (!regex.test(pin)) {
       alert("Your pin is a 7-digit number!");
@@ -60,7 +61,7 @@ export default function BadgerLogin() {
           value={pin}
           onChange={(e) => setPin(e.target.value)}
         ></Form.Control>
-        <Button onClick={() => login()}>Login</Button>
+        <Button type="submit" onClick={(e) => login(e)}>Login</Button>
       </Form>
     </>
   );

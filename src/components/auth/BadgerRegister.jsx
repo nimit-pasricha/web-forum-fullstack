@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerRegister() {
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [confirmedPin, setConfirmedPin] = useState("");
+  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+  const navigate = useNavigate();
 
   //   TODO: Handle other error codes
 
-  function registerUser() {
+  function registerUser(e) {
+    e?.preventDefault();
     const regex = /^\d{7}$/;
     if (!regex.test(pin) || !regex.test(confirmedPin)) {
       alert("Your pin must be a 7-digit number!");
@@ -34,9 +39,9 @@ export default function BadgerRegister() {
             alert("That username has already been taken!");
           } else if (res.status === 200) {
             alert("Registration was successful");
-            setUsername("");
-            setPin("");
-            setConfirmedPin("");
+            sessionStorage.setItem("loginStatus", JSON.stringify(true));
+            setLoginStatus(true);
+            navigate("/");
           } else {
             throw new Error("failed registration");
           }
@@ -68,7 +73,9 @@ export default function BadgerRegister() {
           value={confirmedPin}
           onChange={(e) => setConfirmedPin(e.target.value)}
         ></Form.Control>
-        <Button onClick={() => registerUser()}>Register</Button>
+        <Button type="submit" onClick={(e) => registerUser(e)}>
+          Register
+        </Button>
       </Form>
     </>
   );

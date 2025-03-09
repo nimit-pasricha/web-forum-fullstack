@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Pagination } from "react-bootstrap";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Container, Row, Col, Pagination, Form, Button } from "react-bootstrap";
 import BadgerMessage from "./BadgerMessage";
+import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerChatroom(props) {
   const [messages, setMessages] = useState([]);
   // TODO: Reset page to first page when user change rooms
   const [page, setPage] = useState(1);
+  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
 
   const loadMessages = () => {
     fetch(
@@ -27,10 +29,60 @@ export default function BadgerChatroom(props) {
   // chatrooms, only its props change! Try it yourself.
   useEffect(loadMessages, [props, page]);
 
+  const postTitleRef = useRef();
+  const postContentRef = useRef();
+
+  function createPost(e) {
+    e?.preventDefault();
+    if (!postTitleRef || !postContentRef) {
+      alert("You must provide both a title and content!");
+    } else {
+      fetch(
+        `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?chatroom=${props.name}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "X-CS571-ID": CS571.getBadgerId(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: postTitleRef.current.value,
+            content: postContentRef.current.value,
+          }),
+        }
+      )
+        .then((res) => {
+          if (res.status === 200) {
+            alert("Successfully posted!");
+            loadMessages();
+            postTitleRef.current.value = ""
+            postContentRef.current.value = ""
+          } else {
+            throw new Error("Failed to create post");
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  }
+
   return (
     <>
       <h1>{props.name} Chatroom</h1>
-      {/* TODO: Allow an authenticated user to create a post. */}
+      {loginStatus ? (
+        <Form>
+          <Form.Label>Post Title</Form.Label>
+          <Form.Control ref={postTitleRef}></Form.Control>
+          <Form.Label>Post Content</Form.Label>
+          <Form.Control ref={postContentRef}></Form.Control>
+          <Button type="submit" onClick={(e) => createPost(e)}>
+            Create Post
+          </Button>
+        </Form>
+      ) : (
+        <p>You must be logged in to post!</p>
+      )}
+
       <hr />
       {messages.length > 0 ? (
         <>
