@@ -12,15 +12,23 @@ export default function BadgerChatroom(props) {
     fetch(
       `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?chatroom=${props.name}&page=${page}`,
       {
+        credentials: "include",
         headers: {
           "X-CS571-ID": CS571.getBadgerId(),
         },
       }
     )
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 200 || res.status === 304) {
+          return res.json();
+        } else {
+          throw new Error("Failed to fetch messages");
+        }
+      })
       .then((json) => {
         setMessages(json.messages);
-      });
+      })
+      .catch((err) => console.error(err));
   };
 
   // Why can't we just say []?
@@ -73,12 +81,18 @@ export default function BadgerChatroom(props) {
         credentials: "include",
         headers: {
           "X-CS571-ID": CS571.getBadgerId(),
-          "Content-Type": "application/json",
         },
       }
-    );
-    alert("Successfully deleted the post!");
-    loadMessages();
+    )
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Successfully deleted the post!");
+          loadMessages();
+        } else {
+          throw new Error("Failed to delete post");
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   return (
@@ -88,16 +102,15 @@ export default function BadgerChatroom(props) {
         <Form>
           <Form.Label htmlFor="postTitleInput">Post Title</Form.Label>
           <Form.Control id="postTitleInput" ref={postTitleRef}></Form.Control>
-          <Form.Label>Post Content</Form.Label>
+          <Form.Label htmlFor="postContentInput">Post Content</Form.Label>
           <Form.Control
-            htmlFor="postContentInput"
+            as="textarea"
+            rows={2}
+            id="postContentInput"
             ref={postContentRef}
           ></Form.Control>
-          <Button
-            id="postContentInput"
-            type="submit"
-            onClick={(e) => createPost(e)}
-          >
+          <br />
+          <Button type="submit" onClick={(e) => createPost(e)}>
             Create Post
           </Button>
         </Form>

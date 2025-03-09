@@ -1,20 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import BadgerLoginStatusContext from "./../contexts/BadgerLoginStatusContext";
 
 export default function BadgerLogin() {
-  const [username, setUsername] = useState("");
-  const [pin, setPin] = useState("");
+  const usernameRef = useRef();
+  const pinRef = useRef();
   const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
   const navigate = useNavigate();
 
   function login(e) {
     e?.preventDefault();
     const regex = /^\d{7}$/;
-    if (!regex.test(pin)) {
+    if (!regex.test(pinRef.current.value)) {
       alert("Your pin is a 7-digit number!");
-    } else if (!username || !pin) {
+    } else if (!usernameRef.current.value || !pinRef.current.value) {
       alert("You must provide both a username and pin!");
     } else {
       fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/login", {
@@ -25,17 +25,19 @@ export default function BadgerLogin() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: username,
-          pin: pin,
+          username: usernameRef.current.value,
+          pin: pinRef.current.value,
         }),
       })
         .then((res) => {
           if (res.status === 401) {
             alert("Incorrect username or pin!");
+          } else if (res.statys === 400) {
+            alert("A request must contain a 'username' and 'pin'")
           } else if (res.status === 200) {
             alert("Login was successful");
-            sessionStorage.setItem("loginStatus", JSON.stringify(username));
-            setLoginStatus(username);
+            sessionStorage.setItem("loginStatus", JSON.stringify(usernameRef.current.value));
+            setLoginStatus(usernameRef.current.value);
             navigate("/");
           } else {
             throw new Error("failed login");
@@ -52,16 +54,14 @@ export default function BadgerLogin() {
         <Form.Label htmlFor="usernameInput">Username</Form.Label>
         <Form.Control
           id="usernameInput"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          ref={usernameRef}
         ></Form.Control>
 
         <Form.Label htmlFor="pinInput">Pin</Form.Label>
         <Form.Control
           id="pinInput"
           type="password"
-          value={pin}
-          onChange={(e) => setPin(e.target.value)}
+          ref={pinRef}
         ></Form.Control>
         <Button type="submit" onClick={(e) => login(e)}>
           Login

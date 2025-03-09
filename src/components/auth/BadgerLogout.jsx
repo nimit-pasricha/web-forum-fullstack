@@ -14,13 +14,20 @@ export default function BadgerLogout() {
       },
       credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          throw new Error("failed to log out");
+        }
+      })
       .then((json) => {
         alert("You have been logged out");
         sessionStorage.setItem("loginStatus", null);
         setLoginStatus(null);
-        navigate("/")
-      });
+        navigate("/");
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (

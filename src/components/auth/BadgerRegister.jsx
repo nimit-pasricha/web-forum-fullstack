@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
@@ -9,8 +9,6 @@ export default function BadgerRegister() {
   const [confirmedPin, setConfirmedPin] = useState("");
   const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
   const navigate = useNavigate();
-
-  //   TODO: Handle other error codes
 
   function registerUser(e) {
     e?.preventDefault();

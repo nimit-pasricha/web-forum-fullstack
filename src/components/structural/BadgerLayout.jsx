@@ -13,27 +13,8 @@ function BadgerLayout(props) {
   const [loginStatus, setLoginStatus] = useState(
     JSON.parse(sessionStorage.getItem("loginStatus"))
   );
-  const [chatrooms, setChatrooms] = useState([]);
-  useEffect(() => {
-    fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/chatrooms", {
-      headers: {
-        // eslint-disable-next-line no-undef
-        "X-CS571-ID": CS571.getBadgerId(),
-      },
-    })
-      .then((res) => {
-        if (res.status === 200 || res.status === 304) {
-          return res.json();
-        } else {
-          throw new Error("Failed to fetch chatrooms");
-        }
-      })
-      .then((chatrooms) => {
-        setChatrooms(chatrooms);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
+  const chatrooms = props.chatrooms;
+  
   return (
     <div>
       <Navbar bg="dark" variant="dark">
