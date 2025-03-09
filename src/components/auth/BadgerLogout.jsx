@@ -17,8 +17,8 @@ export default function BadgerLogout() {
       .then((res) => res.json())
       .then((json) => {
         alert("You have been logged out");
-        sessionStorage.setItem("loginStatus", JSON.stringify(false));
-        setLoginStatus(false);
+        sessionStorage.setItem("loginStatus", null);
+        setLoginStatus(null);
         navigate("/")
       });
   }, []);

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import BadgerLoginStatusContext from "./../contexts/BadgerLoginStatusContext"
+import BadgerLoginStatusContext from "./../contexts/BadgerLoginStatusContext";
 
 export default function BadgerLogin() {
   const [username, setUsername] = useState("");
@@ -34,8 +34,8 @@ export default function BadgerLogin() {
             alert("Incorrect username or pin!");
           } else if (res.status === 200) {
             alert("Login was successful");
-            sessionStorage.setItem("loginStatus", JSON.stringify(true));
-            setLoginStatus(true);
+            sessionStorage.setItem("loginStatus", JSON.stringify(username));
+            setLoginStatus(username);
             navigate("/");
           } else {
             throw new Error("failed login");
@@ -49,19 +49,23 @@ export default function BadgerLogin() {
     <>
       <h1>Login</h1>
       <Form>
-        <Form.Label>Username</Form.Label>
+        <Form.Label htmlFor="usernameInput">Username</Form.Label>
         <Form.Control
+          id="usernameInput"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></Form.Control>
 
-        <Form.Label>Pin</Form.Label>
+        <Form.Label htmlFor="pinInput">Pin</Form.Label>
         <Form.Control
+          id="pinInput"
           type="password"
           value={pin}
           onChange={(e) => setPin(e.target.value)}
         ></Form.Control>
-        <Button type="submit" onClick={(e) => login(e)}>Login</Button>
+        <Button type="submit" onClick={(e) => login(e)}>
+          Login
+        </Button>
       </Form>
     </>
   );

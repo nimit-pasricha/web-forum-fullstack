@@ -54,21 +54,24 @@ export default function BadgerRegister() {
     <>
       <h1>Register</h1>
       <Form>
-        <Form.Label>Username</Form.Label>
+        <Form.Label htmlFor="usernameInput">Username</Form.Label>
         <Form.Control
+          id="usernameInput"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></Form.Control>
 
-        <Form.Label>Pin</Form.Label>
+        <Form.Label htmlFor="pinInput">Pin</Form.Label>
         <Form.Control
+          id="pinInput"
           type="password"
           value={pin}
           onChange={(e) => setPin(e.target.value)}
         ></Form.Control>
 
-        <Form.Label>Confirm Pin</Form.Label>
+        <Form.Label htmlFor="confirmPinInput">Confirm Pin</Form.Label>
         <Form.Control
+          id="confirmPinInput"
           type="password"
           value={confirmedPin}
           onChange={(e) => setConfirmedPin(e.target.value)}

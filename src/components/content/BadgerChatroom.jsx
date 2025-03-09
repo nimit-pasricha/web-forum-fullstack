@@ -10,6 +10,7 @@ export default function BadgerChatroom(props) {
   const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
 
   const loadMessages = () => {
+    console.log(props.name);
     fetch(
       `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?chatroom=${props.name}&page=${page}`,
       {
@@ -34,7 +35,7 @@ export default function BadgerChatroom(props) {
 
   function createPost(e) {
     e?.preventDefault();
-    if (!postTitleRef || !postContentRef) {
+    if (!postTitleRef.current.value || !postContentRef.current.value) {
       alert("You must provide both a title and content!");
     } else {
       fetch(
@@ -56,8 +57,8 @@ export default function BadgerChatroom(props) {
           if (res.status === 200) {
             alert("Successfully posted!");
             loadMessages();
-            postTitleRef.current.value = ""
-            postContentRef.current.value = ""
+            postTitleRef.current.value = "";
+            postContentRef.current.value = "";
           } else {
             throw new Error("Failed to create post");
           }
@@ -66,16 +67,39 @@ export default function BadgerChatroom(props) {
     }
   }
 
+  function deletePost(messageToDeleteId) {
+    fetch(
+      `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?id=${messageToDeleteId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "X-CS571-ID": CS571.getBadgerId(),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    alert("Successfully deleted the post!");
+    loadMessages();
+  }
+
   return (
     <>
       <h1>{props.name} Chatroom</h1>
       {loginStatus ? (
         <Form>
-          <Form.Label>Post Title</Form.Label>
-          <Form.Control ref={postTitleRef}></Form.Control>
+          <Form.Label htmlFor="postTitleInput">Post Title</Form.Label>
+          <Form.Control id="postTitleInput" ref={postTitleRef}></Form.Control>
           <Form.Label>Post Content</Form.Label>
-          <Form.Control ref={postContentRef}></Form.Control>
-          <Button type="submit" onClick={(e) => createPost(e)}>
+          <Form.Control
+            htmlFor="postContentInput"
+            ref={postContentRef}
+          ></Form.Control>
+          <Button
+            id="postContentInput"
+            type="submit"
+            onClick={(e) => createPost(e)}
+          >
             Create Post
           </Button>
         </Form>
@@ -90,7 +114,10 @@ export default function BadgerChatroom(props) {
             <Row>
               {messages.map((message) => (
                 <Col key={message.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                  <BadgerMessage {...message}></BadgerMessage>
+                  <BadgerMessage
+                    {...message}
+                    deletePost={deletePost}
+                  ></BadgerMessage>
                 </Col>
               ))}
             </Row>
