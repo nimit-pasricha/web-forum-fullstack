@@ -10,8 +10,9 @@ function BadgerLayout(props) {
   // You'll probably want to see if there is an existing
   // user in sessionStorage first. If so, that should
   // be your initial loginStatus state.
-  const [loginStatus, setLoginStatus] = useState(undefined);
-
+  const [loginStatus, setLoginStatus] = useState(
+    JSON.parse(sessionStorage.getItem("loginStatus"))
+  );
   const [chatrooms, setChatrooms] = useState([]);
   useEffect(() => {
     fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/chatrooms", {
@@ -51,15 +52,28 @@ function BadgerLayout(props) {
             <Nav.Link as={Link} to="/">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="login">
-              Login
-            </Nav.Link>
-            <Nav.Link as={Link} to="register">
-              Register
-            </Nav.Link>
+            {!loginStatus && (
+              <Nav.Link as={Link} to="login">
+                Login
+              </Nav.Link>
+            )}
+            {!loginStatus && (
+              <Nav.Link as={Link} to="register">
+                Register
+              </Nav.Link>
+            )}
+            {loginStatus && (
+              <Nav.Link as={Link} to="logout">
+                Logout
+              </Nav.Link>
+            )}
             <NavDropdown title="Chatrooms">
               {chatrooms.map((chatroom) => (
-                <NavDropdown.Item as={Link} to={`chatrooms/${chatroom}`} key={chatroom}>
+                <NavDropdown.Item
+                  as={Link}
+                  to={`chatrooms/${chatroom}`}
+                  key={chatroom}
+                >
                   {chatroom}
                 </NavDropdown.Item>
               ))}

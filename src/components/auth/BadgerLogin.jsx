@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import BadgerLoginStatusContext from "./../contexts/BadgerLoginStatusContext"
 
 export default function BadgerLogin() {
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
+  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+  const navigate = useNavigate();
 
   function login() {
     const regex = /^\d{7}$/;
@@ -29,8 +33,9 @@ export default function BadgerLogin() {
             alert("Incorrect username or pin!");
           } else if (res.status === 200) {
             alert("Login was successful");
-            setUsername("");
-            setPin("");
+            sessionStorage.setItem("loginStatus", JSON.stringify(true));
+            setLoginStatus(true);
+            navigate("/");
           } else {
             throw new Error("failed login");
           }
