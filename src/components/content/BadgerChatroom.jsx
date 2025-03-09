@@ -5,7 +5,6 @@ import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerChatroom(props) {
   const [messages, setMessages] = useState([]);
-  // TODO: Reset page to first page when user change rooms
   const [page, setPage] = useState(1);
   const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
 

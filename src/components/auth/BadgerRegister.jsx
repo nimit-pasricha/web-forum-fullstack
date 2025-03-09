@@ -39,8 +39,8 @@ export default function BadgerRegister() {
             alert("That username has already been taken!");
           } else if (res.status === 200) {
             alert("Registration was successful");
-            sessionStorage.setItem("loginStatus", JSON.stringify(true));
-            setLoginStatus(true);
+            sessionStorage.setItem("loginStatus", JSON.stringify(username));
+            setLoginStatus(username);
             navigate("/");
           } else {
             throw new Error("failed registration");
