@@ -104,7 +104,6 @@ export default function BadgerChatroom(props) {
           <Form.Control id="postTitleInput" ref={postTitleRef}></Form.Control>
           <Form.Label htmlFor="postContentInput">Post Content</Form.Label>
           <Form.Control
-            as="textarea"
             rows={2}
             id="postContentInput"
             ref={postContentRef}
