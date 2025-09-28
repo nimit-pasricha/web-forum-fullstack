@@ -16,7 +16,7 @@ function BadgerApp() {
   useEffect(() => {
     fetch('https://cs571api.cs.wisc.edu/rest/s25/hw6/chatrooms', {
         headers: {
-        "X-CS571-ID": CS571.getBadgerId(),
+        "Authorization": "TODO",
       }
     }).then(res => res.json()).then(json => {
       setChatrooms(json)

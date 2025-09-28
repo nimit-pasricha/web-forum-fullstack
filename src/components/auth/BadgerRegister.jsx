@@ -24,7 +24,7 @@ export default function BadgerRegister() {
         method: "POST",
         credentials: "include",
         headers: {
-          "X-CS571-ID": CS571.getBadgerId(),
+          "Authorization": "TODO",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
