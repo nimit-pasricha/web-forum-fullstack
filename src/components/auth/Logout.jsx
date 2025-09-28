@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
+import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function BadgerLogout() {
+export default function Logout() {
   const navigate = useNavigate();
-  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
 
   useEffect(() => {
     fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/logout", {

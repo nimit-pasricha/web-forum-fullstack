@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 
-function BadgerChatHome () {
+function ChatHome () {
     return <>
         <h1>Welcome to the forum!</h1>
         <p>Please be mindful about what you post, this is a shared space..</p>
@@ -8,4 +8,4 @@ function BadgerChatHome () {
     </>
 }
 
-export default memo(BadgerChatHome);
+export default memo(ChatHome);

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Pagination, Form, Button } from "react-bootstrap";
-import BadgerMessage from "./BadgerMessage";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
+import Message from "./Message.jsx";
+import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function BadgerChatroom(props) {
+export default function Chatroom(props) {
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
-  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
 
   const loadMessages = () => {
     fetch(
@@ -32,7 +32,7 @@ export default function BadgerChatroom(props) {
   };
 
   // Why can't we just say []?
-  // The BadgerChatroom doesn't unload/reload when switching
+  // The Chatroom doesn't unload/reload when switching
   // chatrooms, only its props change! Try it yourself.
   useEffect(loadMessages, [props, page]);
 
@@ -124,10 +124,10 @@ export default function BadgerChatroom(props) {
             <Row>
               {messages.map((message) => (
                 <Col key={message.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                  <BadgerMessage
+                  <Message
                     {...message}
                     deletePost={deletePost}
-                  ></BadgerMessage>
+                  ></Message>
                 </Col>
               ))}
             </Row>

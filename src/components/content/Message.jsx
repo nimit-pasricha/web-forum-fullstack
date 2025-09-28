@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Button, Card } from "react-bootstrap";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
+import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-function BadgerMessage(props) {
-  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+function Message(props) {
+  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
 
   const dt = new Date(props.created);
 
@@ -25,4 +25,4 @@ function BadgerMessage(props) {
   );
 }
 
-export default BadgerMessage;
+export default Message;

@@ -3,9 +3,9 @@ import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link, Outlet } from "react-router-dom";
 
 import crest from "../../assets/uw-crest.svg";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
+import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-function BadgerLayout(props) {
+function Layout(props) {
   // TODO @ Step 6:
   // You'll probably want to see if there is an existing
   // user in sessionStorage first. If so, that should
@@ -63,14 +63,14 @@ function BadgerLayout(props) {
         </Container>
       </Navbar>
       <div style={{ margin: "1rem" }}>
-        <BadgerLoginStatusContext.Provider
+        <LoginStatusContext.Provider
           value={[loginStatus, setLoginStatus]}
         >
           <Outlet />
-        </BadgerLoginStatusContext.Provider>
+        </LoginStatusContext.Provider>
       </div>
     </div>
   );
 }
 
-export default BadgerLayout;
+export default Layout;

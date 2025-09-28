@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
+import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function BadgerRegister() {
+export default function Refactor() {
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [confirmedPin, setConfirmedPin] = useState("");
-  const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
   const navigate = useNavigate();
 
   function registerUser(e) {

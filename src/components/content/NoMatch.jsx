@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function BadgerNoMatch() {
+function NoMatch() {
     return (
         <div>
             <h2>That's a 404.</h2>
@@ -12,4 +12,4 @@ function BadgerNoMatch() {
     );
 }
 
-export default BadgerNoMatch;
+export default NoMatch;
