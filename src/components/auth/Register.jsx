@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function Refactor() {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [confirmedPin, setConfirmedPin] = useState("");

@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Layout from './Layout.jsx';
 import Login from '../auth/Login.jsx';
-import Refactor from '../auth/Refactor.jsx';
+import Register from '../auth/Register.jsx';
 import Logout from '../auth/Logout.jsx';
 import Chatroom from '../content/Chatroom.jsx';
 import BadgerChatHome from '../content/ChatHome.jsx';
@@ -29,7 +29,7 @@ function App() {
         <Route path="/" element={<Layout chatrooms={chatrooms} />}>
           <Route index element={<BadgerChatHome />} />
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/register" element={<Refactor />}></Route>
+          <Route path="/register" element={<Register />}></Route>
           <Route path="/logout" element={<Logout />}></Route>
           {
             chatrooms.map(chatroom => {
