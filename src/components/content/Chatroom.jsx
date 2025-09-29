@@ -10,7 +10,7 @@ export default function Chatroom(props) {
 
   const loadMessages = () => {
     fetch(
-      `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?chatroom=${props.name}&page=${page}`,
+      `http://localhost:5000/messages?chatroom=${props.name}&page=${page}`,
       {
         credentials: "include",
         headers: {
@@ -45,7 +45,7 @@ export default function Chatroom(props) {
       alert("You must provide both a title and content!");
     } else {
       fetch(
-        `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?chatroom=${props.name}`,
+        `http://localhost:5000/messages?chatroom=${props.name}`,
         {
           method: "POST",
           credentials: "include",
@@ -75,7 +75,7 @@ export default function Chatroom(props) {
 
   function deletePost(messageToDeleteId) {
     fetch(
-      `https://cs571api.cs.wisc.edu/rest/s25/hw6/messages?id=${messageToDeleteId}`,
+      `http://localhost:5000/messages?id=${messageToDeleteId}`,
       {
         method: "DELETE",
         credentials: "include",

@@ -17,7 +17,7 @@ export default function Login() {
     } else if (!usernameRef.current.value || !pinRef.current.value) {
       alert("You must provide both a username and pin!");
     } else {
-      fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/login", {
+      fetch("http://localhost:5000/login", {
         method: "POST",
         credentials: "include",
         headers: {

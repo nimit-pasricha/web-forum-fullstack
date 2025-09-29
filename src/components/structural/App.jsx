@@ -14,7 +14,7 @@ function App() {
   const [chatrooms, setChatrooms] = useState([]);
 
   useEffect(() => {
-    fetch('https://cs571api.cs.wisc.edu/rest/s25/hw6/chatrooms', {
+    fetch('http://localhost:5000/chatrooms', {
         headers: {
         "Authorization": "TODO",
       }

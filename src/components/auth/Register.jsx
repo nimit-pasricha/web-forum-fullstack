@@ -20,7 +20,7 @@ export default function Register() {
     } else if (pin !== confirmedPin) {
       alert("Your pins do not match!");
     } else {
-      fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/register", {
+      fetch("http://localhost:5000/register", {
         method: "POST",
         credentials: "include",
         headers: {

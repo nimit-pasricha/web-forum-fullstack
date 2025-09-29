@@ -7,7 +7,7 @@ export default function Logout() {
   const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
 
   useEffect(() => {
-    fetch("https://cs571api.cs.wisc.edu/rest/s25/hw6/logout", {
+    fetch("http://localhost:5000/logout", {
       method: "POST",
       headers: {
         "Authorization": "TODO",
