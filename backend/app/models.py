@@ -21,7 +21,7 @@ class Post(db.Model):
     creation_date: Mapped[str] = mapped_column(String, nullable=False)
 
 
-class User:
+class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String, nullable=False)
     password: Mapped[str] = mapped_column(String(7), nullable=False)
