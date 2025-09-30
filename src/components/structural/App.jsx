@@ -14,7 +14,7 @@ function App() {
   const [chatrooms, setChatrooms] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/chatrooms', {
+    fetch('http://127.0.0.1:5000/api/v1/chatrooms', {
         headers: {
         "Authorization": "TODO",
       }

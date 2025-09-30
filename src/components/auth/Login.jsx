@@ -17,7 +17,7 @@ export default function Login() {
     } else if (!usernameRef.current.value || !pinRef.current.value) {
       alert("You must provide both a username and pin!");
     } else {
-      fetch("http://localhost:5000/login", {
+      fetch("http://127.0.0.1:5000/api/v1/login", {
         method: "POST",
         credentials: "include",
         headers: {

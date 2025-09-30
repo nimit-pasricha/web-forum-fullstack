@@ -20,7 +20,7 @@ export default function Register() {
     } else if (pin !== confirmedPin) {
       alert("Your pins do not match!");
     } else {
-      fetch("http://localhost:5000/register", {
+      fetch("http://127.0.0.1:5000/api/v1/register", {
         method: "POST",
         credentials: "include",
         headers: {
