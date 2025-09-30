@@ -19,6 +19,7 @@ class Post(db.Model):
     title: Mapped[str] = mapped_column(String, nullable=False)
     content: Mapped[str] = mapped_column(String, nullable=False)
     creation_date: Mapped[str] = mapped_column(String, nullable=False)
+    chatroom: Mapped[str] = mapped_column(String, nullable=False)
 
 
 class User(db.Model):
