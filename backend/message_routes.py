@@ -21,3 +21,9 @@ def get_messages():
     if page < 1 or page > 4:
         return jsonify({"msg": "A page number must be between 1 and 4."}), 400
     
+    chatroom_exists = db.session.execute(
+        select(Chatroom).filter_by(name=chatroom_name)
+    ).scalar_one_or_none()
+
+    if not chatroom_exists:
+        return jsonify({"msg": "The specified chatroom does not exist."}), 404
