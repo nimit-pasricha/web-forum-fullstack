@@ -27,3 +27,6 @@ def get_messages():
 
     if not chatroom_exists:
         return jsonify({"msg": "The specified chatroom does not exist."}), 404
+    
+    chatroom_col = select(Message).filter_by(chatroom=chatroom_name).order_by(Message.created.desc())
+    pagination = db.paginate(chatroom_col, page=page, per_page=25, error_out=False)
