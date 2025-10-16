@@ -63,4 +63,10 @@ def login():
         return jsonify({"msg": "That username or pin is incorrect!"}), 401
 
 
+@auth_bp.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    response = jsonify({"msg": "You have been logged out! Goodbye."})
+    unset_jwt_cookies(response)
+    return response, 200
 
