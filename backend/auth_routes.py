@@ -42,4 +42,25 @@ def register():
     return response, 200
 
 
+@auth_bp.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    pin = data.get("pin")
+
+    if not username or not pin:
+        return jsonify({"msg": "A request must contain a 'username' and 'pin'"}), 400
+
+    # (## 3. Use modern select() to find user for login)
+    user = db.session.execute(select(User).filter_by(username=username)).scalar_one_or_none()
+
+    if user and user.check_pin(pin):
+        access_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=1))
+        response = jsonify({"msg": "Successfully authenticated.", "user": {"id": user.id, "username": user.username}})
+        set_access_cookies(response, access_token)
+        return response, 200
+    else:
+        return jsonify({"msg": "That username or pin is incorrect!"}), 401
+
+
 
