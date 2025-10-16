@@ -51,7 +51,6 @@ def login():
     if not username or not pin:
         return jsonify({"msg": "A request must contain a 'username' and 'pin'"}), 400
 
-    # (## 3. Use modern select() to find user for login)
     user = db.session.execute(select(User).filter_by(username=username)).scalar_one_or_none()
 
     if user and user.check_pin(pin):
@@ -70,3 +69,17 @@ def logout():
     unset_jwt_cookies(response)
     return response, 200
 
+
+@auth_bp.route("/whoami", methods=["GET"])
+@jwt_required(optional=True)
+def whoami():
+    current_user_id = get_jwt_identity()
+    if not current_user_id:
+        return jsonify({"isLoggedIn": False}), 200
+
+    user = db.session.get(User, current_user_id)
+
+    if user:
+        return jsonify({"isLoggedIn": True, "user": {"id": user.id, "username": user.username}}), 200
+    else:
+        return jsonify({"isLoggedIn": False}), 200
