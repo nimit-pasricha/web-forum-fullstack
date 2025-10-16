@@ -30,3 +30,19 @@ def get_messages():
     
     chatroom_col = select(Message).filter_by(chatroom=chatroom_name).order_by(Message.created.desc())
     pagination = db.paginate(chatroom_col, page=page, per_page=25, error_out=False)
+
+    messages = pagination.items
+
+    result = {
+        "msg": "Successfully got the latest messages!",
+        "page": page,
+        "messages": [{
+            "id": msg.id,
+            "poster": msg.poster.username,
+            "title": msg.title,
+            "content": msg.content,
+            "chatroom": msg.chatroom,
+            "created": msg.created.isoformat()
+        } for msg in messages]
+    }
+    return jsonify(result), 200
