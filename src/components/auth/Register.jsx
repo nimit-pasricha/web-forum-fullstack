@@ -18,7 +18,7 @@ export default function Register(props) {
     } else if (pin !== confirmedPin) {
       alert("Your pins do not match!");
     } else {
-      fetch("http://127.0.0.1:5000/api/v1/register", {
+      fetch("/api/v1/register", {
         method: "POST",
         credentials: "include",
         headers: {

@@ -10,7 +10,7 @@ export default function Chatroom(props) {
 
   const loadMessages = () => {
     fetch(
-      `http://127.0.0.1:5000/api/v1/messages?chatroom=${props.name}&page=${page}`,
+      `/api/v1/messages?chatroom=${props.name}&page=${page}`,
       {
         credentials: "include",
       }
@@ -42,7 +42,7 @@ export default function Chatroom(props) {
       alert("You must provide both a title and content!");
     } else {
       fetch(
-        `http://127.0.0.1:5000/api/v1/messages?chatroom=${props.name}`,
+        `/api/v1/messages?chatroom=${props.name}`,
         {
           method: "POST",
           credentials: "include",
@@ -71,7 +71,7 @@ export default function Chatroom(props) {
 
   function deletePost(messageToDeleteId) {
     fetch(
-      `http://127.0.0.1:5000/api/v1/messages?id=${messageToDeleteId}`,
+      `/api/v1/messages?id=${messageToDeleteId}`,
       {
         method: "DELETE",
         credentials: "include",

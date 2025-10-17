@@ -16,7 +16,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/v1/whoami", {
+    fetch("/api/v1/whoami", {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -30,7 +30,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/v1/chatrooms")
+    fetch("/api/v1/chatrooms")
       .then((res) => res.json())
       .then((json) => setChatrooms(json));
   }, []);

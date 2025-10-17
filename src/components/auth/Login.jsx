@@ -15,7 +15,7 @@ export default function Login(props) {
     } else if (!usernameRef.current.value || !pinRef.current.value) {
       alert("You must provide both a username and pin!");
     } else {
-      fetch("http://127.0.0.1:5000/api/v1/login", {
+      fetch("/api/v1/login", {
         method: "POST",
         credentials: "include",
         headers: {
