@@ -124,7 +124,7 @@ npm run dev
 The frontend development server will typically run on http://localhost:5173.
 
 ## 🔒 Authentication Details
-- **Registration:** Create a new user with a unique username and a 7-digit numeric PIN.
+- **Registration:** Create a new user with a unique username and a minimum 8 character password with numbers, special characters (@$!%*?&), lower and upper case characters.
 - **Login:** Authenticate with username and PIN. A secure `HttpOnly`, `SameSite=Lax` cookie (access_token_cookie) is issued and stored in the browser.
 - **Automatic Session Check:** On every page load, the frontend checks `api/v1/whoami` to verify the user's active session.
 - **Logout:** Deletes the authentication cookie.
