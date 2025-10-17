@@ -13,9 +13,6 @@ export default function Chatroom(props) {
       `http://127.0.0.1:5000/api/v1/messages?chatroom=${props.name}&page=${page}`,
       {
         credentials: "include",
-        headers: {
-          "Authorization": "TODO",
-        },
       }
     )
       .then((res) => {
@@ -50,7 +47,6 @@ export default function Chatroom(props) {
           method: "POST",
           credentials: "include",
           headers: {
-            "Authorization": "TODO",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -79,9 +75,6 @@ export default function Chatroom(props) {
       {
         method: "DELETE",
         credentials: "include",
-        headers: {
-          "Authorization": "TODO",
-        },
       }
     )
       .then((res) => {

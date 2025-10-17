@@ -21,7 +21,6 @@ export default function Login() {
         method: "POST",
         credentials: "include",
         headers: {
-          "Authorization": "TODO",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

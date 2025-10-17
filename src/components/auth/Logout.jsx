@@ -9,9 +9,6 @@ export default function Logout() {
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/v1/logout", {
       method: "POST",
-      headers: {
-        "Authorization": "TODO",
-      },
       credentials: "include",
     })
       .then((res) => {

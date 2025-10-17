@@ -24,7 +24,6 @@ export default function Register() {
         method: "POST",
         credentials: "include",
         headers: {
-          "Authorization": "TODO",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
