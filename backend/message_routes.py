@@ -46,3 +46,35 @@ def get_messages():
         } for msg in messages]
     }
     return jsonify(result), 200
+
+
+@messages_bp.route('/messages', methods=['POST'])
+@jwt_required()
+def post_message():
+    current_user_id = get_jwt_identity()
+    chatroom_name = request.args.get('chatroom')
+    data = request.get_json()
+    title = data.get('title')
+    content = data.get('content')
+
+    if not all([chatroom_name, title, content]):
+        return jsonify({"msg": "Missing chatroom, title, or content."}), 400
+    
+    chatroom_exists = db.session.execute(
+        select(Chatroom).filter_by(name=chatroom_name)
+    ).scalar_one_or_none()
+
+    if not chatroom_exists:
+        return jsonify({"msg": "The specified chatroom does not exist."}), 404
+    
+    new_message = Message(
+        title=title,
+        content=content,
+        user_id=current_user_id,
+        chatroom=chatroom_name
+    )
+    db.session.add(new_message)
+    db.session.commit()
+
+    return jsonify({"msg": "Successfully posted message!", "id": new_message.id}), 200
+
