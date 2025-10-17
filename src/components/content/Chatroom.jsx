@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Pagination, Form, Button } from "react-bootstrap";
-import Message from "./Message.jsx";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Button, Col, Container, Form, Pagination, Row } from "react-bootstrap";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
+import Message from "./Message.jsx";
 
 export default function Chatroom(props) {
   const [messages, setMessages] = useState([]);
@@ -9,12 +9,9 @@ export default function Chatroom(props) {
   const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
 
   const loadMessages = () => {
-    fetch(
-      `/api/v1/messages?chatroom=${props.name}&page=${page}`,
-      {
-        credentials: "include",
-      }
-    )
+    fetch(`/api/v1/messages?chatroom=${props.name}&page=${page}`, {
+      credentials: "include",
+    })
       .then((res) => {
         if (res.status === 200 || res.status === 304) {
           return res.json();
@@ -41,20 +38,17 @@ export default function Chatroom(props) {
     if (!postTitleRef.current.value || !postContentRef.current.value) {
       alert("You must provide both a title and content!");
     } else {
-      fetch(
-        `/api/v1/messages?chatroom=${props.name}`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: postTitleRef.current.value,
-            content: postContentRef.current.value,
-          }),
-        }
-      )
+      fetch(`/api/v1/messages?chatroom=${props.name}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: postTitleRef.current.value,
+          content: postContentRef.current.value,
+        }),
+      })
         .then((res) => {
           if (res.status === 200) {
             alert("Successfully posted!");
@@ -70,13 +64,10 @@ export default function Chatroom(props) {
   }
 
   function deletePost(messageToDeleteId) {
-    fetch(
-      `/api/v1/messages?id=${messageToDeleteId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-      }
-    )
+    fetch(`/api/v1/messages?id=${messageToDeleteId}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
       .then((res) => {
         if (res.status === 200) {
           alert("Successfully deleted the post!");
@@ -117,10 +108,7 @@ export default function Chatroom(props) {
             <Row>
               {messages.map((message) => (
                 <Col key={message.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                  <Message
-                    {...message}
-                    deletePost={deletePost}
-                  ></Message>
+                  <Message {...message} deletePost={deletePost}></Message>
                 </Col>
               ))}
             </Row>

@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from extensions import cors, db, jwt
-from flask import Flask, jsonify
+from flask import Flask
 from models import Chatroom, User
 
 load_dotenv()
@@ -25,17 +25,20 @@ db.init_app(app)
 jwt.init_app(app)
 cors.init_app(app, supports_credentials=True, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
 
+
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     user = db.session.get(User, int(identity))
     return user
 
+
 from auth_routes import auth_bp
 from message_routes import messages_bp
 
 app.register_blueprint(auth_bp, url_prefix="/api/v1")
 app.register_blueprint(messages_bp, url_prefix="/api/v1")
+
 
 @app.cli.command("seed-db")
 def seed_db():

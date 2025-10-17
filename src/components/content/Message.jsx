@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Button, Card } from "react-bootstrap";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
 

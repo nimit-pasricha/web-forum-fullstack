@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Layout from "./Layout.jsx";
 import Login from "../auth/Login.jsx";
-import Register from "../auth/Register.jsx";
 import Logout from "../auth/Logout.jsx";
-import Chatroom from "../content/Chatroom.jsx";
+import Register from "../auth/Register.jsx";
 import BadgerChatHome from "../content/ChatHome.jsx";
+import Chatroom from "../content/Chatroom.jsx";
 import NoMatch from "../content/NoMatch.jsx";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
+import Layout from "./Layout.jsx";
 
 function App() {
   const [chatrooms, setChatrooms] = useState([]);
