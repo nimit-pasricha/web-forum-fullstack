@@ -32,7 +32,7 @@ This project was initially a frontend-only university assignment, which I have s
 -   **Bootstrap / React-Bootstrap:** UI component library for styling.
 -   **JavaScript (ES6+):** Core language for frontend logic.
 
-## 🛠️ Setup and Installation
+## 🛠️ Local Development Setup
 
 ### 1. Clone the Repository
 
