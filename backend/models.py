@@ -3,8 +3,7 @@ from __future__ import annotations
 import datetime
 from typing import List
 
-from app import db
-from flask_sqlalchemy import SQLAlchemy
+from extensions import db
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -16,9 +15,14 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(db.String(64), unique=True, nullable=False)
     pin_hash: Mapped[str] = mapped_column(db.String(256), nullable=False)
-
-    # Defines the one-to-many relationship with Message
     messages: Mapped[List["Message"]] = relationship(back_populates="poster")
+
+    def __init__(self, username, pin):
+        self.username = username
+        self.pin_hash = generate_password_hash(pin)
+
+    def check_pin(self, pin: str) -> bool:
+        return check_password_hash(self.pin_hash, pin)
 
     def set_pin(self, pin: str):
         """Creates a secure hash for a given PIN."""
@@ -40,7 +44,6 @@ class Message(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     chatroom: Mapped[str] = mapped_column(ForeignKey("chatroom.name"), nullable=False)
 
-    # Defines the many-to-one relationship with User
     poster: Mapped["User"] = relationship(back_populates="messages")
 
 

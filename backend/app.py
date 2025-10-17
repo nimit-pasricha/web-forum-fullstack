@@ -1,10 +1,9 @@
 import os
 
 from dotenv import load_dotenv
+from extensions import cors, db, jwt
 from flask import Flask
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from flask_sqlalchemy import SQLAlchemy
+from models import Chatroom
 
 load_dotenv()
 
@@ -18,15 +17,13 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Configure JWT to use cookies
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-app.config["JWT_COOKIE_SECURE"] = True  # Set to False for local testing with HTTP
+app.config["JWT_COOKIE_SECURE"] = True
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
-# Initialize Extensions
-db = SQLAlchemy(app)
-jwt = JWTManager(app)
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+db.init_app(app)
+jwt.init_app(app)
+cors.init_app(app, supports_credentials=True, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
 
-# Import and register blueprints
 from auth_routes import auth_bp
 from message_routes import messages_bp
 
@@ -36,8 +33,6 @@ app.register_blueprint(messages_bp, url_prefix="/api/v1")
 
 @app.cli.command("seed-db")
 def seed_db():
-    from models import Chatroom
-
     initial_chatrooms = [
         "Bascom Hill Hangout",
         "Memorial Union Meetups",
@@ -48,7 +43,7 @@ def seed_db():
         "Humanities Hubbub",
     ]
     for name in initial_chatrooms:
-        if not Chatroom.query.filter_by(name=name).first():
+        if not db.session.execute(db.select(Chatroom).filter_by(name=name)).scalar():
             chatroom = Chatroom(name=name)
             db.session.add(chatroom)
     db.session.commit()
@@ -57,5 +52,5 @@ def seed_db():
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()  # Create tables
+        db.create_all()
     app.run(debug=True)
