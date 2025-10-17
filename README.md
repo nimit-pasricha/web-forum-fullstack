@@ -6,7 +6,7 @@ This project was initially a frontend-only university assignment, which I have s
 
 ## ✨ Features
 
--   **User Authentication:** Secure user registration and login with a custom 7-digit PIN, leveraging JWT (JSON Web Tokens) for session management via `HttpOnly` and `SameSite` cookies.
+-   **User Authentication:** Secure user registration and login with a robust password policy, leveraging JWT (JSON Web Tokens) for session management via `HttpOnly` and `SameSite` cookies.
 -   **Multiple Chatrooms:** Users can browse and post messages in a variety of predefined chatrooms (e.g., Bascom Hill Hangout, Memorial Union Meetups).
 -   **Message Management:** Authenticated users can create new posts and delete their own existing posts.
 -   **Centralized State Management:** React's Context API is used for efficient, global management of user authentication status across the frontend.
@@ -23,7 +23,7 @@ This project was initially a frontend-only university assignment, which I have s
 -   **Flask-JWT-Extended:** For secure JSON Web Token (JWT) based authentication.
 -   **Flask-CORS:** Handling Cross-Origin Resource Sharing.
 -   **python-dotenv:** For managing environment variables.
--   **Werkzeug:** For PIN hashing.
+-   **Werkzeug:** For password hashing.
 
 **Frontend:**
 -   **React.js:** JavaScript library for building user interfaces.
@@ -82,14 +82,10 @@ Replace the placeholder secret keys with long, random strings.
 #### Initialize Database and Seed Chatrooms
 
 ```bash
-flask shell
->>> from extensions import db
->>> from app import app
->>> with app.app_context():
-...     db.create_all()
-... 
->>> exit()
+# Run the app once to create the database file, then stop it (Ctrl+C).
+python3 app.py
 
+# Now that the database exists, seed it with the chatrooms.
 flask seed-db
 ```
 
@@ -125,7 +121,7 @@ The frontend development server will typically run on http://localhost:5173.
 
 ## 🔒 Authentication Details
 - **Registration:** Create a new user with a unique username and a minimum 8 character password with numbers, special characters (@$!%*?&), lower and upper case characters.
-- **Login:** Authenticate with username and PIN. A secure `HttpOnly`, `SameSite=Lax` cookie (access_token_cookie) is issued and stored in the browser.
+- **Login:** Authenticate with username and password. A secure `HttpOnly`, `SameSite=Lax` cookie (access_token_cookie) is issued and stored in the browser.
 - **Automatic Session Check:** On every page load, the frontend checks `api/v1/whoami` to verify the user's active session.
 - **Logout:** Deletes the authentication cookie.
 
