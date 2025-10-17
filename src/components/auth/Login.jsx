@@ -9,11 +9,12 @@ export default function Login(props) {
 
   function login(e) {
     e?.preventDefault();
-    const regex = /^\d{7}$/;
-    if (!regex.test(pinRef.current.value)) {
-      alert("Your pin is a 7-digit number!");
+    const passwordPolicyRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordPolicyRegex.test(pinRef.current.value)) {
+      alert("Your password is at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
     } else if (!usernameRef.current.value || !pinRef.current.value) {
-      alert("You must provide both a username and pin!");
+      alert("You must provide both a username and password!");
     } else {
       fetch("/api/v1/login", {
         method: "POST",
