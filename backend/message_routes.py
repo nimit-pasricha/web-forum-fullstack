@@ -78,3 +78,20 @@ def post_message():
 
     return jsonify({"msg": "Successfully posted message!", "id": new_message.id}), 200
 
+@messages_bp.route('/messages', methods=['DELETE'])
+@jwt_required()
+def delete_message():
+    current_user_id = get_jwt_identity()
+    message_id = request.args.get('id', type=int)
+
+    if not message_id:
+        return jsonify({"msg": "A message 'id' query parameter is required."}), 400
+    
+    message = db.get_or_404(Message, message_id, description="That message does not exist!")
+    
+    if message.user_id != current_user_id:
+        return jsonify({"msg": "You may not delete another user's post!"}), 401
+    
+    db.session.delete(message)
+    db.session.commit()
+    return jsonify({"msg": "Successfully deleted message!"}), 200
