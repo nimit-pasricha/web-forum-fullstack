@@ -1,14 +1,14 @@
-# auth_routes.py
-from flask import Blueprint, request, jsonify
-from models import User, db
+from datetime import timedelta
+
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
     create_access_token,
-    jwt_required,
     get_jwt_identity,
-    unset_jwt_cookies,
+    jwt_required,
     set_access_cookies,
+    unset_jwt_cookies,
 )
-from datetime import timedelta
+from models import User, db
 from sqlalchemy import select
 
 auth_bp = Blueprint("auth_bp", __name__)

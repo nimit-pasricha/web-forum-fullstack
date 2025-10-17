@@ -1,13 +1,13 @@
 from __future__ import annotations
+
 import datetime
 from typing import List
 
+from app import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from app import db
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 class User(db.Model):
