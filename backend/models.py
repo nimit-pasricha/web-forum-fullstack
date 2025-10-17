@@ -14,23 +14,16 @@ class User(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(db.String(64), unique=True, nullable=False)
-    pin_hash: Mapped[str] = mapped_column(db.String(256), nullable=False)
+    password_hash: Mapped[str] = mapped_column(db.String(256), nullable=False)
     messages: Mapped[List["Message"]] = relationship(back_populates="poster")
 
-    def __init__(self, username, pin):
+    def __init__(self, username, password):
         self.username = username
-        self.pin_hash = generate_password_hash(pin)
+        self.password_hash = generate_password_hash(password)
 
-    def check_pin(self, pin: str) -> bool:
-        return check_password_hash(self.pin_hash, pin)
-
-    def set_pin(self, pin: str):
-        """Creates a secure hash for a given PIN."""
-        self.pin_hash = generate_password_hash(pin)
-
-    def check_pin(self, pin: str) -> bool:
-        """Checks if the provided PIN matches the stored hash."""
-        return check_password_hash(self.pin_hash, pin)
+    def check_password(self, password: str) -> bool:
+        """Checks if the provided password matches the stored hash."""
+        return check_password_hash(self.password_hash, password)
 
 
 class Message(db.Model):

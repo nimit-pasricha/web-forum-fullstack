@@ -4,19 +4,23 @@ import { useNavigate } from "react-router";
 
 export default function Register(props) {
   const [username, setUsername] = useState("");
-  const [pin, setPin] = useState("");
-  const [confirmedPin, setConfirmedPin] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmedPassword, setConfirmedPassword] = useState("");
   const navigate = useNavigate();
 
   function registerUser(e) {
     e?.preventDefault();
-    const regex = /^\d{7}$/;
-    if (!regex.test(pin) || !regex.test(confirmedPin)) {
-      alert("Your pin must be a 7-digit number!");
-    } else if (!username || !pin) {
-      alert("You must provide both a username and pin!");
-    } else if (pin !== confirmedPin) {
-      alert("Your pins do not match!");
+
+    // Updated password policy regex
+    const passwordPolicyRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!username || !password) {
+      alert("You must provide both a username and password!");
+    } else if (password !== confirmedPassword) {
+      alert("Your passwords do not match!");
+    } else if (!passwordPolicyRegex.test(password)) {
+      alert("Your password does not meet the policy requirements.");
     } else {
       fetch("/api/v1/register", {
         method: "POST",
@@ -26,15 +30,18 @@ export default function Register(props) {
         },
         body: JSON.stringify({
           username: username,
-          pin: pin,
+          password: password, // Changed from pin to password
         }),
       })
         .then((res) => {
           if (res.status === 200) {
             return res.json();
           } else {
-            alert("That username has already been taken!");
-            throw new Error("Failed registration");
+            // Handle specific error from backend
+            return res.json().then((data) => {
+              alert(data.msg || "That username has already been taken!");
+              throw new Error(data.msg || "Failed registration");
+            });
           }
         })
         .then((data) => {
@@ -57,22 +64,29 @@ export default function Register(props) {
           onChange={(e) => setUsername(e.target.value)}
         ></Form.Control>
 
-        <Form.Label htmlFor="pinInput">Pin</Form.Label>
+        <Form.Label htmlFor="passwordInput">Password</Form.Label>
         <Form.Control
-          id="pinInput"
+          id="passwordInput"
           type="password"
-          value={pin}
-          onChange={(e) => setPin(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         ></Form.Control>
+        <Form.Text>
+          Passwords must be at least 8 characters long and contain at least one
+          uppercase letter, one lowercase letter, one number, and one special
+          character.
+        </Form.Text>
 
-        <Form.Label htmlFor="confirmPinInput">Confirm Pin</Form.Label>
+        <Form.Label htmlFor="confirmPasswordInput">Confirm Password</Form.Label>
         <Form.Control
-          id="confirmPinInput"
+          id="confirmPasswordInput"
           type="password"
-          value={confirmedPin}
-          onChange={(e) => setConfirmedPin(e.target.value)}
+          value={confirmedPassword}
+          onChange={(e) => setConfirmedPassword(e.target.value)}
         ></Form.Control>
-        <Button type="submit">Register</Button>
+        <Button className="mt-2" type="submit">
+          Register
+        </Button>
       </Form>
     </>
   );
