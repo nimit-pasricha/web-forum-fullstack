@@ -1,4 +1,4 @@
-# BadgerChat: Full-Stack Web Forum
+# Full-Stack Web Forum
 
 BadgerChat is a dynamic, full-stack web forum application developed with a Flask backend and a React frontend. It allows users to register, log in securely, create and delete posts in various chatrooms, and engage in real-time discussions.
 
@@ -37,7 +37,7 @@ This project was initially a frontend-only university assignment, which I have s
 ### 1. Clone the Repository
 
 ```bash
-git clone [YOUR_GITHUB_REPO_URL]
+git clone https://github.com/nimit-pasricha/web-forum-fullstack
 cd web-forum-fullstack
 ```
 
