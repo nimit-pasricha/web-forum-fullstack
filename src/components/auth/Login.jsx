@@ -1,12 +1,10 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function Login() {
+export default function Login(props) {
   const usernameRef = useRef();
   const pinRef = useRef();
-  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
   const navigate = useNavigate();
 
   function login(e) {
@@ -29,18 +27,17 @@ export default function Login() {
         }),
       })
         .then((res) => {
-          if (res.status === 401) {
-            alert("Incorrect username or pin!");
-          } else if (res.statys === 400) {
-            alert("A request must contain a 'username' and 'pin'")
-          } else if (res.status === 200) {
-            alert("Login was successful");
-            sessionStorage.setItem("loginStatus", JSON.stringify(usernameRef.current.value));
-            setLoginStatus(usernameRef.current.value);
-            navigate("/");
+          if (res.status === 200) {
+            return res.json();
           } else {
-            throw new Error("failed login");
+            alert("Incorrect username or pin!");
+            throw new Error("Failed login");
           }
+        })
+        .then((data) => {
+          alert("Login was successful");
+          props.onLoginSuccess(data.user);
+          navigate("/");
         })
         .catch((err) => console.error(err));
     }
@@ -49,22 +46,13 @@ export default function Login() {
   return (
     <>
       <h1>Login</h1>
-      <Form>
+      <Form onSubmit={login}>
         <Form.Label htmlFor="usernameInput">Username</Form.Label>
-        <Form.Control
-          id="usernameInput"
-          ref={usernameRef}
-        ></Form.Control>
+        <Form.Control id="usernameInput" ref={usernameRef}></Form.Control>
 
         <Form.Label htmlFor="pinInput">Pin</Form.Label>
-        <Form.Control
-          id="pinInput"
-          type="password"
-          ref={pinRef}
-        ></Form.Control>
-        <Button type="submit" onClick={(e) => login(e)}>
-          Login
-        </Button>
+        <Form.Control id="pinInput" type="password" ref={pinRef}></Form.Control>
+        <Button type="submit">Login</Button>
       </Form>
     </>
   );

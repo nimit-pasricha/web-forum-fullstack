@@ -1,13 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function Register() {
+export default function Register(props) {
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [confirmedPin, setConfirmedPin] = useState("");
-  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
   const navigate = useNavigate();
 
   function registerUser(e) {
@@ -32,16 +30,17 @@ export default function Register() {
         }),
       })
         .then((res) => {
-          if (res.status === 409) {
-            alert("That username has already been taken!");
-          } else if (res.status === 200) {
-            alert("Registration was successful");
-            sessionStorage.setItem("loginStatus", JSON.stringify(username));
-            setLoginStatus(username);
-            navigate("/");
+          if (res.status === 200) {
+            return res.json();
           } else {
-            throw new Error("failed registration");
+            alert("That username has already been taken!");
+            throw new Error("Failed registration");
           }
+        })
+        .then((data) => {
+          alert("Registration was successful");
+          props.onLoginSuccess(data.user);
+          navigate("/");
         })
         .catch((err) => console.error(err));
     }
@@ -50,7 +49,7 @@ export default function Register() {
   return (
     <>
       <h1>Register</h1>
-      <Form>
+      <Form onSubmit={registerUser}>
         <Form.Label htmlFor="usernameInput">Username</Form.Label>
         <Form.Control
           id="usernameInput"
@@ -73,9 +72,7 @@ export default function Register() {
           value={confirmedPin}
           onChange={(e) => setConfirmedPin(e.target.value)}
         ></Form.Control>
-        <Button type="submit" onClick={(e) => registerUser(e)}>
-          Register
-        </Button>
+        <Button type="submit">Register</Button>
       </Form>
     </>
   );

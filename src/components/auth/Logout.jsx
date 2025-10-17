@@ -1,10 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
-export default function Logout() {
+export default function Logout(props) {
   const navigate = useNavigate();
-  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/v1/logout", {
@@ -12,17 +10,13 @@ export default function Logout() {
       credentials: "include",
     })
       .then((res) => {
-        if (res.status === 200) {
-          return res.json();
+        if (res.ok) {
+          alert("You have been logged out");
+          props.onLogoutSuccess();
+          navigate("/");
         } else {
-          throw new Error("failed to log out");
+          throw new Error("Failed to log out");
         }
-      })
-      .then((json) => {
-        alert("You have been logged out");
-        sessionStorage.setItem("loginStatus", null);
-        setLoginStatus(null);
-        navigate("/");
       })
       .catch((err) => console.error(err));
   }, []);
@@ -30,7 +24,7 @@ export default function Logout() {
   return (
     <>
       <h1>Logout</h1>
-      <p>You have been successfully logged out.</p>
+      <p>You are being logged out...</p>
     </>
   );
 }

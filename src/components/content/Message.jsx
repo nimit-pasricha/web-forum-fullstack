@@ -3,7 +3,7 @@ import { Button, Card } from "react-bootstrap";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
 function Message(props) {
-  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
+  const [loginStatus] = useContext(LoginStatusContext);
 
   const dt = new Date(props.created);
 
@@ -16,7 +16,7 @@ function Message(props) {
       <br />
       <i>{props.poster}</i>
       <p>{props.content}</p>
-      {loginStatus === props.poster && (
+      {loginStatus && loginStatus.username === props.poster && (
         <Button variant="danger" onClick={() => props.deletePost(props.id)}>
           Delete Post
         </Button>

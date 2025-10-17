@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link, Outlet } from "react-router-dom";
 
@@ -6,15 +6,9 @@ import crest from "../../assets/uw-crest.svg";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
 
 function Layout(props) {
-  // TODO @ Step 6:
-  // You'll probably want to see if there is an existing
-  // user in sessionStorage first. If so, that should
-  // be your initial loginStatus state.
-  const [loginStatus, setLoginStatus] = useState(
-    JSON.parse(sessionStorage.getItem("loginStatus"))
-  );
+  const [loginStatus] = useContext(LoginStatusContext);
   const chatrooms = props.chatrooms;
-  
+
   return (
     <div>
       <Navbar bg="dark" variant="dark">
@@ -60,14 +54,13 @@ function Layout(props) {
               ))}
             </NavDropdown>
           </Nav>
+          {loginStatus && (
+            <Navbar.Text>Welcome, {loginStatus.username}!</Navbar.Text>
+          )}
         </Container>
       </Navbar>
       <div style={{ margin: "1rem" }}>
-        <LoginStatusContext.Provider
-          value={[loginStatus, setLoginStatus]}
-        >
-          <Outlet />
-        </LoginStatusContext.Provider>
+        <Outlet />
       </div>
     </div>
   );
