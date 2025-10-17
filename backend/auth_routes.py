@@ -9,7 +9,7 @@ from flask_jwt_extended import (
     set_access_cookies,
     unset_jwt_cookies,
 )
-from models import Chatroom, Message, User, db  # <-- Keep model imports
+from models import Chatroom, Message, User, db
 from sqlalchemy import select
 
 auth_bp = Blueprint("auth_bp", __name__)
@@ -35,7 +35,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    access_token = create_access_token(identity=new_user.id, expires_delta=timedelta(hours=1))
+    access_token = create_access_token(identity=str(new_user.id), expires_delta=timedelta(hours=1))
     response = jsonify(
         {"msg": "Successfully authenticated.", "user": {"id": new_user.id, "username": new_user.username}}
     )
@@ -55,7 +55,7 @@ def login():
     user = db.session.execute(select(User).filter_by(username=username)).scalar_one_or_none()
 
     if user and user.check_pin(pin):
-        access_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=1))
+        access_token = create_access_token(identity=str(user.id), expires_delta=timedelta(hours=1))
         response = jsonify({"msg": "Successfully authenticated.", "user": {"id": user.id, "username": user.username}})
         set_access_cookies(response, access_token)
         return response, 200

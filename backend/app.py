@@ -2,8 +2,8 @@ import os
 
 from dotenv import load_dotenv
 from extensions import cors, db, jwt
-from flask import Flask
-from models import Chatroom
+from flask import Flask, jsonify
+from models import Chatroom, User
 
 load_dotenv()
 
@@ -17,20 +17,25 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Configure JWT to use cookies
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-app.config["JWT_COOKIE_SECURE"] = True
+app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
-app.config["JWT_COOKIE_SAMESITE"] = "None"
+# app.config["JWT_COOKIE_SAMESITE"] = "None"
 
 db.init_app(app)
 jwt.init_app(app)
 cors.init_app(app, supports_credentials=True, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    user = db.session.get(User, int(identity))
+    return user
 
 from auth_routes import auth_bp
 from message_routes import messages_bp
 
 app.register_blueprint(auth_bp, url_prefix="/api/v1")
 app.register_blueprint(messages_bp, url_prefix="/api/v1")
-
 
 @app.cli.command("seed-db")
 def seed_db():
@@ -54,4 +59,4 @@ def seed_db():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, ssl_context='adhoc')
+    app.run(debug=True, port=5000)
