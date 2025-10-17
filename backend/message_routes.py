@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_current_user, jwt_required
 from models import Chatroom, Message, db
 from sqlalchemy import select
 
@@ -54,7 +54,7 @@ def get_messages():
 @messages_bp.route("/messages", methods=["POST"])
 @jwt_required()
 def post_message():
-    current_user_id = get_jwt_identity()
+    current_user = get_current_user()
     chatroom_name = request.args.get("chatroom")
     data = request.get_json()
     title = data.get("title")
@@ -68,7 +68,7 @@ def post_message():
     if not chatroom_exists:
         return jsonify({"msg": "The specified chatroom does not exist."}), 404
 
-    new_message = Message(title=title, content=content, user_id=current_user_id, chatroom=chatroom_name)
+    new_message = Message(title=title, content=content, user_id=current_user.id, chatroom=chatroom_name)
     db.session.add(new_message)
     db.session.commit()
 
@@ -78,7 +78,7 @@ def post_message():
 @messages_bp.route("/messages", methods=["DELETE"])
 @jwt_required()
 def delete_message():
-    current_user_id = get_jwt_identity()
+    current_user = get_current_user()
     message_id = request.args.get("id", type=int)
 
     if not message_id:
@@ -86,7 +86,7 @@ def delete_message():
 
     message = db.get_or_404(Message, message_id, description="That message does not exist!")
 
-    if message.user_id != current_user_id:
+    if message.user_id != current_user.id:
         return jsonify({"msg": "You may not delete another user's post!"}), 401
 
     db.session.delete(message)
