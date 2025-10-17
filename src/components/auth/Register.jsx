@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 export default function Register(props) {
   const [username, setUsername] = useState("");
@@ -10,42 +11,37 @@ export default function Register(props) {
 
   function registerUser(e) {
     e?.preventDefault();
-
-    // Updated password policy regex
     const passwordPolicyRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (!username || !password) {
-      alert("You must provide both a username and password!");
+      toast.error("You must provide both a username and password!");
     } else if (password !== confirmedPassword) {
-      alert("Your passwords do not match!");
+      toast.error("Your passwords do not match!");
     } else if (!passwordPolicyRegex.test(password)) {
-      alert("Your password does not meet the policy requirements.");
+      toast.error("Your password does not meet the policy requirements.");
     } else {
       fetch("/api/v1/register", {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: username,
-          password: password, // Changed from pin to password
+          password: password,
         }),
       })
         .then((res) => {
           if (res.status === 200) {
             return res.json();
           } else {
-            // Handle specific error from backend
             return res.json().then((data) => {
-              alert(data.msg || "That username has already been taken!");
+              toast.error(data.msg || "That username has already been taken!");
               throw new Error(data.msg || "Failed registration");
             });
           }
         })
         .then((data) => {
-          alert("Registration was successful");
+          toast.success("Registration was successful!");
           props.onLoginSuccess(data.user);
           navigate("/");
         })
@@ -63,7 +59,6 @@ export default function Register(props) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></Form.Control>
-
         <Form.Label htmlFor="passwordInput">Password</Form.Label>
         <Form.Control
           id="passwordInput"
@@ -76,7 +71,6 @@ export default function Register(props) {
           uppercase letter, one lowercase letter, one number, and one special
           character.
         </Form.Text>
-
         <Form.Label htmlFor="confirmPasswordInput">Confirm Password</Form.Label>
         <Form.Control
           id="confirmPasswordInput"

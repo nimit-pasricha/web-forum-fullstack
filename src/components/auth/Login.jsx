@@ -1,42 +1,37 @@
 import { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 export default function Login(props) {
   const usernameRef = useRef();
-  const pinRef = useRef();
+  const pinRef = useRef(); // Renaming to passwordRef would be a good next step
   const navigate = useNavigate();
 
   function login(e) {
     e?.preventDefault();
-    const passwordPolicyRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordPolicyRegex.test(pinRef.current.value)) {
-      alert("Your password is at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
-    } else if (!usernameRef.current.value || !pinRef.current.value) {
-      alert("You must provide both a username and password!");
+    if (!usernameRef.current.value || !pinRef.current.value) {
+      toast.error("You must provide both a username and password!");
     } else {
       fetch("/api/v1/login", {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: usernameRef.current.value,
-          pin: pinRef.current.value,
+          password: pinRef.current.value, // Backend expects 'password'
         }),
       })
         .then((res) => {
           if (res.status === 200) {
             return res.json();
           } else {
-            alert("Incorrect username or pin!");
+            toast.error("Incorrect username or password!");
             throw new Error("Failed login");
           }
         })
         .then((data) => {
-          alert("Login was successful");
+          toast.success("Login was successful!");
           props.onLoginSuccess(data.user);
           navigate("/");
         })
@@ -51,9 +46,15 @@ export default function Login(props) {
         <Form.Label htmlFor="usernameInput">Username</Form.Label>
         <Form.Control id="usernameInput" ref={usernameRef}></Form.Control>
 
-        <Form.Label htmlFor="pinInput">Pin</Form.Label>
-        <Form.Control id="pinInput" type="password" ref={pinRef}></Form.Control>
-        <Button type="submit">Login</Button>
+        <Form.Label htmlFor="passwordInput">Password</Form.Label>
+        <Form.Control
+          id="passwordInput"
+          type="password"
+          ref={pinRef}
+        ></Form.Control>
+        <Button className="mt-2" type="submit">
+          Login
+        </Button>
       </Form>
     </>
   );

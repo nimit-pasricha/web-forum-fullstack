@@ -1,12 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Pagination, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 import LoginStatusContext from "../contexts/LoginStatusContext.js";
 import Message from "./Message.jsx";
 
 export default function Chatroom(props) {
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
-  const [loginStatus, setLoginStatus] = useContext(LoginStatusContext);
+  const [loginStatus] = useContext(LoginStatusContext);
 
   const loadMessages = () => {
     fetch(`/api/v1/messages?chatroom=${props.name}&page=${page}`, {
@@ -25,9 +26,6 @@ export default function Chatroom(props) {
       .catch((err) => console.error(err));
   };
 
-  // Why can't we just say []?
-  // The Chatroom doesn't unload/reload when switching
-  // chatrooms, only its props change! Try it yourself.
   useEffect(loadMessages, [props, page]);
 
   const postTitleRef = useRef();
@@ -36,14 +34,12 @@ export default function Chatroom(props) {
   function createPost(e) {
     e?.preventDefault();
     if (!postTitleRef.current.value || !postContentRef.current.value) {
-      alert("You must provide both a title and content!");
+      toast.error("You must provide both a title and content!");
     } else {
       fetch(`/api/v1/messages?chatroom=${props.name}`, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: postTitleRef.current.value,
           content: postContentRef.current.value,
@@ -51,11 +47,12 @@ export default function Chatroom(props) {
       })
         .then((res) => {
           if (res.status === 200) {
-            alert("Successfully posted!");
+            toast.success("Successfully posted!");
             loadMessages();
             postTitleRef.current.value = "";
             postContentRef.current.value = "";
           } else {
+            toast.error("Failed to create post. Are you logged in?");
             throw new Error("Failed to create post");
           }
         })
@@ -70,9 +67,10 @@ export default function Chatroom(props) {
     })
       .then((res) => {
         if (res.status === 200) {
-          alert("Successfully deleted the post!");
+          toast.info("Successfully deleted the post!");
           loadMessages();
         } else {
+          toast.error("Failed to delete post.");
           throw new Error("Failed to delete post");
         }
       })
@@ -88,6 +86,7 @@ export default function Chatroom(props) {
           <Form.Control id="postTitleInput" ref={postTitleRef}></Form.Control>
           <Form.Label htmlFor="postContentInput">Post Content</Form.Label>
           <Form.Control
+            as="textarea"
             rows={2}
             id="postContentInput"
             ref={postContentRef}
@@ -100,24 +99,19 @@ export default function Chatroom(props) {
       ) : (
         <p>You must be logged in to post!</p>
       )}
-
       <hr />
       {messages.length > 0 ? (
-        <>
-          <Container fluid>
-            <Row>
-              {messages.map((message) => (
-                <Col key={message.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                  <Message {...message} deletePost={deletePost}></Message>
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </>
+        <Container fluid>
+          <Row>
+            {messages.map((message) => (
+              <Col key={message.id} xs={12} sm={12} md={6} lg={4} xl={3}>
+                <Message {...message} deletePost={deletePost}></Message>
+              </Col>
+            ))}
+          </Row>
+        </Container>
       ) : (
-        <>
-          <p>There are no messages on this page yet!</p>
-        </>
+        <p>There are no messages on this page yet!</p>
       )}
       <Pagination>
         <Pagination.Item

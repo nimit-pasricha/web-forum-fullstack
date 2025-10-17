@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 import Login from "../auth/Login.jsx";
 import Logout from "../auth/Logout.jsx";
 import Register from "../auth/Register.jsx";
@@ -49,6 +50,18 @@ function App() {
 
   return (
     <LoginStatusContext.Provider value={[loginStatus, setLoginStatus]}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout chatrooms={chatrooms} />}>

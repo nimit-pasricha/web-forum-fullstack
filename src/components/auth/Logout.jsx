@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 export default function Logout(props) {
   const navigate = useNavigate();
@@ -11,10 +12,11 @@ export default function Logout(props) {
     })
       .then((res) => {
         if (res.ok) {
-          alert("You have been logged out");
+          toast.info("You have been logged out.");
           props.onLogoutSuccess();
           navigate("/");
         } else {
+          toast.error("Failed to log out.");
           throw new Error("Failed to log out");
         }
       })
