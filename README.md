@@ -2,7 +2,7 @@
 
 BadgerChat is a dynamic, full-stack web forum application developed with a Flask backend and a React frontend. It allows users to register, log in securely, create and delete posts in various chatrooms, and engage in real-time discussions.
 
-This project was initially a frontend-only university assignment, which I have significantly extended and transformed into a complete, portfolio-ready application by building out a robust and secure backend API from scratch.
+This project was initially a frontend-only university assignment, which I have significantly extended and transformed into a complete application by building out a robust and secure backend API from scratch.
 
 ## ✨ Features
 
