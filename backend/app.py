@@ -59,7 +59,12 @@ def seed_db():
     print("Database seeded with initial chatrooms.")
 
 
-if __name__ == "__main__":
+@app.cli.command("init-db")
+def init_db_command():
+    """Creates the database tables."""
     with app.app_context():
         db.create_all()
+
+
+if __name__ == "__main__":
     app.run(debug=True, port=5000)
