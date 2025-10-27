@@ -31,9 +31,45 @@ The application is fully containerized using Docker and orchestrated with Docker
 
 ---
 
-## 🛠️ Setup
+## 🏗️ Architecture & Deployment
 
-This is the fastest and most reliable way to run the application.
+This project is a multi-container application orchestrated by Docker Compose. This design separates concerns, improves scalability, and replicates a professional production environment.
+
+### Application Architecture
+
+The `frontend` container (Nginx) acts as the single "entrypoint" for all user traffic. It serves the static React files and acts as a reverse proxy, forwarding all API-bound traffic to the `backend` container. This eliminates CORS issues and securely isolates the backend from direct public access.
+
+```
+ [ User Browser ]
+       |
+       | (http://localhost)
+       v
+ [ Nginx Container (frontend) ]
+       |
+       +---> [ / ] Serves React Static Files (from /usr/share/nginx/html)
+       |
+       +---> [ /api/... ] Reverse Proxies to...
+                     |
+                     v
+             [ Flask Container (backend) ]
+                     |
+                     <--> (via internal 'db' hostname)
+                     |
+             [ Postgres Container (db) ]
+```
+
+### Automated CI/CD Pipeline
+
+This repository uses a CI/CD pipeline powered by GitHub Actions. The workflow is triggered on every push to the `main` branch.
+
+Workflow:
+`[ Git Push to main ]` → `[ GitHub Actions Trigger ]` → `[ Login to Docker Hub ]` → `[ Build & Push 'backend' Image ]` → `[ Build & Push 'frontend' Image ]`
+
+This process automates the creation of production-ready artifacts.
+
+As long as a server has `docker-compose.yml` and `.env`, it can can pull these pre-built images from Docker Hub, and start serving them, enabling a fast, pull-based deployment that doesn't require building from source.
+
+## 🛠️ Development Setup
 
 ### 1. Clone the Repository
 
