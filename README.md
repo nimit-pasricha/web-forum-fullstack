@@ -3,7 +3,7 @@
 Development for this project has moved to a new, clean repository. All future updates and commits will be pushed to the new location.
 
 ### **Please see the new, active repository here:**
-### [https://github.com/nimit-pasricha/flask-react-forum](https://github.com/nimit-pasricha/flask-react-forum)
+### [https://github.com/nimit-pasricha/web-forum](https://github.com/nimit-pasricha/web-forum)
 
 # Full-Stack Containerized Web Forum with CI/CD
 
