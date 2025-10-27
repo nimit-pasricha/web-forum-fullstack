@@ -10,10 +10,13 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5432:5432" # For local db debugging
 
   # Flask API
   backend:
+    image: pasrichanimit/web-forum-backend:latest
+    env_file:
+      - .env
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -29,6 +32,7 @@ services:
 
   # React App
   frontend:
+    image: pasrichanimit/web-forum-frontend:latest
     build:
       context: .
       dockerfile: Dockerfile.frontend
