@@ -5,138 +5,87 @@ Development for this project has moved to a new, clean repository. All future up
 ### **Please see the new, active repository here:**
 ### [https://github.com/nimit-pasricha/flask-react-forum](https://github.com/nimit-pasricha/flask-react-forum)
 
-# Full-Stack Web Forum
+# Full-Stack Containerized Web Forum with CI/CD
 
-BadgerChat is a dynamic, full-stack web forum application developed with a Flask backend and a React frontend. It allows users to register, log in securely, create and delete posts in various chatrooms, and engage in real-time discussions.
+This is a full-stack web forum application, originally a frontend-only university project, that I have significantly extended and re-engineered. It features a robust Flask RESTful API, a dynamic React frontend, and a complete DevOps workflow including containerization and an automated CI/CD pipeline.
 
-This project was initially a frontend-only university assignment, which I have significantly extended and transformed into a complete application by building out a robust and secure backend API from scratch.
+The application is fully containerized using Docker and orchestrated with Docker Compose, allowing for a reproducible, one-command setup. The CI/CD pipeline automatically builds and publishes the production-ready Docker images to Docker Hub on every push to the `main` branch.
 
 ## ✨ Features
 
--   **User Authentication:** Secure user registration and login with a robust password policy, leveraging JWT (JSON Web Tokens) for session management via `HttpOnly` and `SameSite` cookies.
--   **Multiple Chatrooms:** Users can browse and post messages in a variety of predefined chatrooms (e.g., Bascom Hill Hangout, Memorial Union Meetups).
+-   **Containerized Environment:** The entire application (backend, frontend, database) is orchestrated with Docker Compose for a reliable, isolated, and portable development and production setup.
+-   **CI/CD Pipeline:** An automated GitHub Actions workflow builds and publishes production-ready backend and frontend images to Docker Hub.
+-   **User Authentication:** Secure user registration and login with JWT (JSON Web Tokens) for session management via `HttpOnly` cookies.
+-   **RESTful API:** A well-structured Flask API built from scratch, featuring Blueprints and full CRUD functionality for posts and chatrooms.
+-   **Production-Ready Proxy:** An Nginx reverse proxy serves the static React files and intelligently routes `/api` requests to the Flask backend, eliminating CORS issues in production.
+-   **Multiple Chatrooms:** Users can browse and post messages in a variety of predefined chatrooms.
 -   **Message Management:** Authenticated users can create new posts and delete their own existing posts.
--   **Centralized State Management:** React's Context API is used for efficient, global management of user authentication status across the frontend.
--   **Responsive UI:** Built with React Bootstrap for a clean and responsive user interface.
--   **RESTful API:** A well-structured Flask API with clear endpoints for all core functionalities.
 
 ## 🚀 Technologies Used
 
-**Backend:**
--   **Python:** Main programming language.
--   **Flask:** Web framework for building the API.
--   **Flask-SQLAlchemy:** ORM (Object-Relational Mapper) for database interactions.
--   **SQLite:** Development database (`forum.db`).
--   **Flask-JWT-Extended:** For secure JSON Web Token (JWT) based authentication.
--   **Flask-CORS:** Handling Cross-Origin Resource Sharing.
--   **python-dotenv:** For managing environment variables.
--   **Werkzeug:** For password hashing.
+| Category | Technology |
+| :--- | :--- |
+| **DevOps / Deployment** | **Docker, Docker Compose, GitHub Actions (CI/CD), Nginx** |
+| **Backend** | **Python, Flask, PostgreSQL, SQLAlchemy, Flask-JWT-Extended, Werkzeug** |
+| **Frontend** | **React.js, React Router, Vite, Bootstrap, JavaScript (ES6+)** |
 
-**Frontend:**
--   **React.js:** JavaScript library for building user interfaces.
--   **React Router:** For client-side routing and navigation.
--   **Vite:** Fast build tool and development server.
--   **Bootstrap / React-Bootstrap:** UI component library for styling.
--   **JavaScript (ES6+):** Core language for frontend logic.
+---
 
-## 🛠️ Local Development Setup
+## 🛠️ Setup
+
+This is the fastest and most reliable way to run the application.
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/nimit-pasricha/web-forum-fullstack
-cd web-forum-fullstack
+git clone [https://github.com/nimit-pasricha/flask-react-forum](https://github.com/nimit-pasricha/flask-react-forum)
+cd flask-react-forum
 ```
 
-### 2. Backend Setup
-
-Navigate to the `backend` directory:
+### 2. Configure Environment Variables
 
 ```bash
-cd backend
+# In the ./backend/ directory, create a .env file
+touch ./backend/.env
 ```
 
-#### Create and activate virtual environment:
+Edit `./backend/.env` and add your secret keys:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+# You can generate secret keys with: python3 -c 'import secrets; print(secrets.token_hex(32))'
+SECRET_KEY='your_flask_secret_key_here' 
+JWT_SECRET_KEY='your_jwt_secret_key_here'
 ```
 
-Install python dependencies:
+### 3. Run the Application
+
+From the project's root directory, run:
 
 ```bash
-pip install -r requirements.txt
+docker-compose up --build -d
 ```
 
-#### Configure environment variables:
+### 4. Initialize the Database
+
+The containers are running, but the database is empty. In a new terminal, run the following commands to initialize the tables and seed the chatrooms:
 
 ```bash
-touch .env
+docker-compose exec backend flask init-db
+docker-compose exec backend flask seed-db
 ```
 
-Edit .env and add your secret keys and the Flask app declaration:
+**The application is now running:**
+- Frontend: `http://localhost`
 
-```bash
-FLASK_APP=app.py
-SECRET_KEY='your_flask_secret_key_here' # Generate with: python -c 'import secrets; print(secrets.token_hex(32))'
-JWT_SECRET_KEY='your_jwt_secret_key_here' # Generate with: python -c 'import secrets; print(secrets.token_hex(32))'
-DATABASE_URL='sqlite:///forum.db' # For local development
-```
+- Backend API: `http://localhost/api/...` (via the Nginx proxy)
 
-Replace the placeholder secret keys with long, random strings.
+## 🔒 Authentication & Proxy Details
 
-#### Initialize Database and Seed Chatrooms
+- **Production (Docker):** An Nginx container acts as a reverse proxy. It serves the static React app on port 80 and routes all requests to `/api/...` to the Flask `backend` service, eliminating all CORS issues.
 
-```bash
-# Run the app once to create the database file, then stop it (Ctrl+C).
-python3 app.py
+- **Local Development (Legacy):** The project also supports a local, non-containerized setup. In this mode, a Vite proxy (`vite.config.js`) is used to resolve CORS between the frontend (`localhost:5173`) and the backend (`localhost:5000`).
 
-# Now that the database exists, seed it with the chatrooms.
-flask seed-db
-```
-
-#### Run the Flask Backend Server
-
-```bash
-python app.py
-```
-
-The backend server will typically run on http://127.0.0.1:5000.
-
-### 3. Frontend Setup
-
-Open a new terminal tab/window and navigate back to the project root:
-
-```bash
-cd .. # if you are in the backend folder
-```
-
-Install Node.js Dependencies
-
-```bash
-npm install
-```
-
-Run the React Frontend Server
-
-```bash
-npm run dev
-```
-
-The frontend development server will typically run on http://localhost:5173.
-
-## 🔒 Authentication Details
-- **Registration:** Create a new user with a unique username and a minimum 8 character password with numbers, special characters (@$!%*?&), lower and upper case characters.
-- **Login:** Authenticate with username and password. A secure `HttpOnly`, `SameSite=Lax` cookie (access_token_cookie) is issued and stored in the browser.
-- **Automatic Session Check:** On every page load, the frontend checks `api/v1/whoami` to verify the user's active session.
-- **Logout:** Deletes the authentication cookie.
-
-**Note on Local Development & Cross-Origin Issues:** This project utilizes a Vite proxy (vite.config.js) to seamlessly handle communication between the frontend (http://localhost:5173) and the backend (http://localhost:5000). This setup elegantly resolves common CORS and SameSite cookie security policies during development, treating all API requests as same-origin from the browser's perspective.
-
-## 🤝 Contributing
-Feel free to fork the repository and contribute! Any feedback or improvements are welcome.
+</details>
 
 ## 📄 License
-
-This project is licensed under the terms of the [MIT License](LICENSE).
+This project is licensed under the terms of the MIT License.
