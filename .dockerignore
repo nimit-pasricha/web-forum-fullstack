@@ -1,0 +1,14 @@
+# Ignore build artifacts
+node_modules
+dist
+.DS_Store
+
+# Ignore Python stuff for the frontend build
+backend
+.venv
+__pycache__
+*.pyc
+
+# Ignore Git
+.git
+.gitignore
