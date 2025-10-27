@@ -23,7 +23,6 @@ app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
 db.init_app(app)
 jwt.init_app(app)
-cors.init_app(app, supports_credentials=True, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
 
 
 @jwt.user_lookup_loader

@@ -6,9 +6,9 @@ services:
     image: postgres:15-alpine
     container_name: postgres_db
     environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_DB=mydb
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -23,7 +23,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/mydatabase
+      - DATABASE_URL=postgresql://dbuser:dbpassword@db:5432/mydb
     volumes:
       - ./backend:/app
     depends_on:

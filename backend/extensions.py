@@ -5,4 +5,3 @@ from flask_sqlalchemy import SQLAlchemy
 # Initialize extensions here
 db = SQLAlchemy()
 jwt = JWTManager()
-cors = CORS()
