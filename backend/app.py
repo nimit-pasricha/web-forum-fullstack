@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from extensions import cors, db, jwt
+from extensions import db, jwt
 from flask import Flask
 from models import Chatroom, User
 
